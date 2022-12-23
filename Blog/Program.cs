@@ -8,50 +8,38 @@ namespace Blog
     {
         static void Main(string[] args)
         {
-            using (var context = new DataContext())
-            {
-                //Create(context);
-                //Update(context);
-                Read(context);
-            }
-        }
+            using var context = new DataContext();
 
-        static void Create(DataContext context)
-        {
-            var tag = new Tag { Name = "ASP.NET", Slug = "aspnet" };
-            context?.Tags?.Add(tag);
+            var user = new User
+            {
+                Name = "André Baltieri",
+                Slug = "andrebaltieri",
+                Email = "andre@balta.io",
+                Image = "https://balta.io",
+                Bio = "10x Microsoft MVP",
+                PasswordHash = "2132121321"
+            };
+
+            var category = new Category
+            {
+                Name = "Backend",
+                Slug = "backend"
+            };
+
+            var post = new Post
+            {
+                Author = user,
+                Category = category,
+                Body = "<p>Hello World</p>",
+                Slug = "Neste artigo vamos aprender EF Core",
+                Summary = "Sumário",
+                Title = "Começando com EF Core",
+                CreateDate = DateTime.Now,
+                LastUpdateDate = DateTime.Now,
+            };
+
+            context?.Posts?.Add(post);
             context?.SaveChanges();
-        }
-        static void Update(DataContext context)
-        {
-            var tag = context?.Tags?.FirstOrDefault(x => x.Id == 3);
-            if (tag is not null)
-            {
-                tag.Name = ".NET";
-                tag.Slug = "dotnet";
-                context?.Tags?.Update(tag);
-                context?.SaveChanges();
-            }
-        }
-        static void Delete(DataContext context)
-        {
-            var tag = context?.Tags?.FirstOrDefault(x => x.Id == 3);
-            if (tag is not null)
-            {
-                context?.Tags?.Remove(tag);
-                context?.SaveChanges();
-            }
-        }
-        static void Read(DataContext context)
-        {
-            var tags = context?.Tags?.AsNoTracking().ToList();
-            if (tags is not null)
-            {
-                foreach (var tag in tags)
-                {
-                    Console.WriteLine(tag.Name);
-                }
-            }
         }
     }
 }
